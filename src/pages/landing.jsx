@@ -1,10 +1,20 @@
+import { useEffect } from "react";
+import { ActivityIndicator } from "react-native";
 import { Text } from "react-native";
 import { View, StyleSheet } from "react-native";
 
 function Landing ({navigation}) {
+    useEffect(() => {
+        setTimeout(() => {
+
+        }, 5000);
+        navigation.navigate("Auth");
+    },[])
+
     return (
         <View style={styles.landingContainer}>
-            <Text>Watch Tower</Text>
+            <Text style={styles.titleText}>Watch Tower</Text>
+            <ActivityIndicator size={"large"} color={"#6798FC"}/>
         </View>
     )
 }
@@ -17,5 +27,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#C1EABB',
         alignItems:"center",
         justifyContent: "center"
+    },
+    titleText : {
+
     }
 })
