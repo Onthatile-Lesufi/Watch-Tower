@@ -13,8 +13,8 @@ export default function App() {
     return (
       <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Mapping" component={Mapping}/>
             <Stack.Screen name="Landing" component={Landing}/>
+            <Stack.Screen name="Mapping" component={Mapping}/>
             <Stack.Screen name="Auth" component={UserAuth}/>
             <Stack.Screen name="History" component={History}/>
           </Stack.Navigator>

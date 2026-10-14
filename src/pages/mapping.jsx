@@ -5,6 +5,7 @@ import * as Location from "expo-location";
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { queryGeminiTransit } from "../llmChat";
+import { createTripPlan } from "../dbUtility";
 
 // Watch Tower Color Palette
 const COLORS = {
@@ -26,6 +27,7 @@ function Mapping({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [tripData, setTripData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["22%", "60%", "92%"], []);
@@ -63,15 +65,35 @@ function Mapping({ navigation }) {
     bottomSheetRef.current?.snapToIndex(1);
   };
 
-  const handleSaveTrip = () => {
-    // Placeholder for saving trip to history / storage
-    Alert.alert("Trip Saved!", "This eco-trip has been logged to your carbon savings diary.");
+  const handleSaveTrip = async () => {
+    if (!tripData) return;
+    setIsSaving(true);
+
+    try {
+      await createTripPlan({
+        origin: origin || "Current Location",
+        destination: destination,
+        distance: tripData.totalDistanceKm,
+        totalDuration: tripData.totalDurationMinutes,
+        carbonOffset: tripData.estimatedCarbonSavedKg,
+        legs: tripData.legs,
+      });
+
+      Alert.alert(
+        "Trip Saved!",
+        "This route has been logged to your Watch Tower carbon diary."
+      );
+    } catch (error) {
+      Alert.alert("Save Error", "Could not save trip to your database.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const lat = location?.coords?.latitude || -26.1952;
   const lng = location?.coords?.longitude || 28.0340;
 
-  // Added tripData to dependency array & added fitBounds for framing markers
+  // Leaflet HTML with safely escaped JS strings to prevent single-quote crashes
   const leafletHTML = useMemo(() => `
     <!DOCTYPE html>
     <html>
@@ -99,10 +121,13 @@ function Mapping({ navigation }) {
                     var dLat = ${tripData.destinationCoords.lat};
                     var dLng = ${tripData.destinationCoords.long};
 
-                    var originMarker = L.marker([oLat, oLng]).addTo(map).bindPopup("Origin - ${origin}");
-                    var destMarker = L.marker([dLat, dLng]).addTo(map).bindPopup("Destination - ${destination}");
+                    var originMarker = L.marker([oLat, oLng])
+                      .addTo(map)
+                      .bindPopup("Origin - " + ${JSON.stringify(origin || "Origin")});
+                    var destMarker = L.marker([dLat, dLng])
+                      .addTo(map)
+                      .bindPopup("Destination - " + ${JSON.stringify(destination || "Destination")});
 
-                    // Auto-zoom and frame both markers on screen
                     var bounds = L.latLngBounds([[oLat, oLng], [dLat, dLng]]);
                     map.fitBounds(bounds, { padding: [50, 50] });
                 ` : `
@@ -111,7 +136,7 @@ function Mapping({ navigation }) {
             </script>
         </body>
     </html>
-  `, [lat, lng, tripData]);
+  `, [lat, lng, tripData, origin, destination]);
 
   if (loading) {
     return (
@@ -134,7 +159,7 @@ function Mapping({ navigation }) {
         style={styles.historyFloatingButton}
         onPress={() => navigation.navigate("History")}
       >
-        <Text style={styles.historyFloatingButtonText}>📜 History</Text>
+        <Text style={styles.historyFloatingButtonText}>History</Text>
       </Pressable>
 
       <BottomSheet
@@ -142,13 +167,13 @@ function Mapping({ navigation }) {
         index={1}
         snapPoints={snapPoints}
         handleIndicatorStyle={{ backgroundColor: COLORS.blue, width: 40 }}
-        backgroundStyle={{ backgroundColor: COLORS.white }}
+        backgroundStyle={{ backgroundColor: COLORS.yellow }}
       >
         <BottomSheetScrollView contentContainerStyle={styles.sheetContent}>
           <View style={styles.headerRow}>
             <Text style={styles.sheetTitle}>Watch Tower Planner</Text>
             <View style={styles.ecoBadge}>
-              <Text style={styles.ecoBadgeText}>🌱 Carbon Offset Calculator</Text>
+              <Text style={styles.ecoBadgeText}>Carbon Offset Calculator</Text>
             </View>
           </View>
 
@@ -183,7 +208,7 @@ function Mapping({ navigation }) {
             )}
           </Pressable>
 
-          {/* Full Optimal Trip Breakdown Output */}
+          {/* Optimal Trip Breakdown Output */}
           {tripData && (
             <View style={styles.breakdownContainer}>
               
@@ -204,7 +229,7 @@ function Mapping({ navigation }) {
 
                 <View style={styles.offsetHighlight}>
                   <Text style={styles.offsetText}>
-                    ⚡ Saves ~{tripData.estimatedCarbonSavedKg} kg CO₂e vs driving!
+                    Saves ~{tripData.estimatedCarbonSavedKg} kg CO₂e vs driving!
                   </Text>
                 </View>
               </View>
@@ -227,17 +252,20 @@ function Mapping({ navigation }) {
                 </View>
               ))}
 
-              {/* Fixed: Moved inside tripData conditional block & tied to handleSaveTrip */}
               <Pressable
                 style={({ pressed }) => [
                   styles.saveButton,
-                  pressed && { opacity: 0.8 },
+                  (pressed || isSaving) && { opacity: 0.8 },
                 ]}
                 onPress={handleSaveTrip}
+                disabled={isSaving}
               >
-                <Text style={styles.saveButtonText}>Save Trip to Diary</Text>
+                {isSaving ? (
+                  <ActivityIndicator color={COLORS.black} />
+                ) : (
+                  <Text style={styles.saveButtonText}>Save Trip to Diary</Text>
+                )}
               </Pressable>
-
             </View>
           )}
         </BottomSheetScrollView>
