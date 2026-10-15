@@ -4,6 +4,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TripLog from "../components/tripLog";
 import { subscribeToUserTrips } from "../dbUtility";
+import { Image } from "react-native";
 
 const COLORS = {
   blue: "#6798FC",
@@ -13,7 +14,7 @@ const COLORS = {
   white: "#FFFFFF",
   black: "#000000",
   darkText: "#1C1C1E",
-  lightGray: "#F4F5F7",
+  lightGray: "#e6e6e6",
   borderGray: "#E5E5EA",
 };
 
@@ -21,7 +22,7 @@ function History({ navigation }) {
     const [trips, setTrips] = useState([]);
     const [dbChecked, setDbChecked] = useState(false);
     const bottomSheetRef = useRef(null);
-    const snapPoints = useMemo(() => ["18%", "45%", "85%"], []);
+    const snapPoints = useMemo(() => ["10%","30%", "45%"], []);
 
     // Subscribe to Firestore trips in real-time
     useEffect(() => {
@@ -60,9 +61,12 @@ function History({ navigation }) {
             {/* Top Navigation Bar */}
             <View style={styles.headerRow}>
                 <Text style={styles.headerTitle}>Emissions Diary</Text>
-                <Pressable style={styles.mapButton} onPress={() => navigation.navigate("Mapping")}>
+                <View>
+                    <Pressable style={styles.mapButton} onPress={() => navigation.navigate("Mapping")}>
+                        <Image style={styles.mapButtonIcon} source={require("../../assets/icons/Mapping.png")}/>
+                    </Pressable>
                     <Text style={styles.mapButtonText}>Map Route</Text>
-                </Pressable>
+                </View>
             </View>
 
             {/* Saved Trips List */}
@@ -147,12 +151,20 @@ const styles = StyleSheet.create({
         color: COLORS.darkText,
     },
     mapButton: {
-        backgroundColor: COLORS.white,
+        width: 60,
         borderColor: COLORS.blue,
         borderWidth: 1.5,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 16,
+        borderRadius: 75,
+        elevation: 5,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+    },
+    mapButtonIcon: {
+        margin: "auto",
+        width: 55,
+        height: 55
     },
     mapButtonText: {
         fontFamily: "Open Sans",

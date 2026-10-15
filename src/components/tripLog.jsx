@@ -11,6 +11,7 @@ const COLORS = {
   darkText: "#1C1C1E",
   lightGray: "#F4F5F7",
   borderGray: "#E5E5EA",
+  pinkCTA: "#FF4C7A",
 };
 
 function TripLog({ navigation, trip }) {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginVertical: 6,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.blue,
+    borderLeftColor: COLORS.pinkCTA,
     gap: 8,
   },
   headerRow: {

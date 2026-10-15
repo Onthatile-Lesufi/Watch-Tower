@@ -6,6 +6,7 @@ import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from "@gorho
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { queryGeminiTransit } from "../llmChat";
 import { createTripPlan } from "../dbUtility";
+import { Image } from "react-native";
 
 // Watch Tower Color Palette
 const COLORS = {
@@ -159,7 +160,7 @@ function Mapping({ navigation }) {
         style={styles.historyFloatingButton}
         onPress={() => navigation.navigate("History")}
       >
-        <Text style={styles.historyFloatingButtonText}>History</Text>
+        <Image style={styles.historyFloatingButtonIcon} source={require('../../assets/icons/History.png')}/>
       </Pressable>
 
       <BottomSheet
@@ -292,14 +293,13 @@ const styles = StyleSheet.create({
   },
   historyFloatingButton: {
     position: "absolute",
+    width: "auto",
+    height: "auto",
     top: 60,
     right: 20,
-    backgroundColor: COLORS.white,
     borderColor: COLORS.blue,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 750,
     elevation: 5,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -307,11 +307,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     zIndex: 10,
   },
-  historyFloatingButtonText: {
-    fontFamily: "Open Sans",
-    color: COLORS.darkText,
-    fontWeight: "700",
-    fontSize: 13,
+  historyFloatingButtonIcon: {
+    margin: "auto",
+    width: 55,
+    height: 55
   },
   sheetContent: {
     padding: 20,

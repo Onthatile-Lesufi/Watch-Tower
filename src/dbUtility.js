@@ -8,7 +8,6 @@ import {
   deleteDoc, 
   query, 
   where, 
-  orderBy, 
   onSnapshot, 
   increment, 
   serverTimestamp 
@@ -43,10 +42,11 @@ export const createTripPlan = async (tripData) => {
 
 export const subscribeToUserTrips = (callback, onError) => {
   const userId = getCurrentUserId();
+  
+  // Single field query (no composite index required)
   const q = query(
     collection(db, COLLECTION_NAME),
-    where("userId", "==", userId),
-    orderBy("lastUsed", "desc")
+    where("userId", "==", userId)
   );
 
   return onSnapshot(
@@ -56,6 +56,14 @@ export const subscribeToUserTrips = (callback, onError) => {
         id: docSnap.id,
         ...docSnap.data(),
       }));
+
+      // Sort chronologically in JS memory
+      trips.sort((a, b) => {
+        const timeA = a.lastUsed?.toMillis ? a.lastUsed.toMillis() : 0;
+        const timeB = b.lastUsed?.toMillis ? b.lastUsed.toMillis() : 0;
+        return timeB - timeA;
+      });
+
       callback(trips);
     },
     (error) => {
@@ -70,15 +78,23 @@ export const getUserTripsOnce = async () => {
     const userId = getCurrentUserId();
     const q = query(
       collection(db, COLLECTION_NAME),
-      where("userId", "==", userId),
-      orderBy("lastUsed", "desc")
+      where("userId", "==", userId)
     );
 
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((docSnap) => ({
+    const trips = snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
       ...docSnap.data(),
     }));
+
+    // Sort chronologically in JS memory
+    trips.sort((a, b) => {
+      const timeA = a.lastUsed?.toMillis ? a.lastUsed.toMillis() : 0;
+      const timeB = b.lastUsed?.toMillis ? b.lastUsed.toMillis() : 0;
+      return timeB - timeA;
+    });
+
+    return trips;
   } catch (error) {
     console.error("Error fetching user trips:", error);
     throw error;
