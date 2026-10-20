@@ -162,6 +162,12 @@ function Mapping({ navigation }) {
       >
         <Image style={styles.historyFloatingButtonIcon} source={require('../../assets/icons/History.png')}/>
       </Pressable>
+      <Pressable
+        style={styles.settingsFloatingButton}
+        onPress={() => navigation.navigate("Settings")}
+      >
+        <Image style={styles.historyFloatingButtonIcon} source={require('../../assets/icons/Settings.png')}/>
+      </Pressable>
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -296,6 +302,22 @@ const styles = StyleSheet.create({
     width: "auto",
     height: "auto",
     top: 60,
+    right: 20,
+    borderColor: COLORS.blue,
+    borderWidth: 1.5,
+    borderRadius: 750,
+    elevation: 5,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    zIndex: 10,
+  },
+  settingsFloatingButton: {
+    position: "absolute",
+    width: "auto",
+    height: "auto",
+    top: 130,
     right: 20,
     borderColor: COLORS.blue,
     borderWidth: 1.5,

@@ -4,7 +4,7 @@
     "slug": "Watch-Tower",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/icon.png",
+    "icon": "./assets/icons/Icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -12,8 +12,8 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/icons/icon.png",
-        "backgroundImage": "./assets/icons/icon.png",
+        "foregroundImage": "./assets/icons/Icon.png",
+        "backgroundImage": "./assets/icons/Icon.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
