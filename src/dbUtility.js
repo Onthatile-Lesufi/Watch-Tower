@@ -148,3 +148,17 @@ export const deleteTripPlan = async (tripId) => {
     throw error;
   }
 };
+
+export const decrementJourneyTaken = async (tripId, currentJourneys = 0) => {
+  try {
+    if (currentJourneys <= 0) return;
+    const tripRef = doc(db, COLLECTION_NAME, tripId);
+    await updateDoc(tripRef, {
+      journeys: increment(-1),
+      lastUsed: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error(`Error decrementing journey for trip ${tripId}:`, error);
+    throw error;
+  }
+};

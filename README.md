@@ -1,6 +1,10 @@
 # Watch Tower
 
+![](./assets/icons/Icon.png)
+
 Watch Tower is an eco-conscious urbanist mobile application designed to simplify public transit navigation while empowering users to track and quantify their personal carbon footprint savings.
+
+[Demostration Video](https://drive.google.com/file/d/1KSdd08vH4-dykg06mrcUb1szYeJYHjQN/view?usp=sharing)
 
 ---
 
@@ -20,7 +24,10 @@ Watch Tower is an eco-conscious urbanist mobile application designed to simplify
 
 Watch Tower bridges intelligent multi-modal transit planning with daily personal sustainability tracking. The application translates urban navigation into actionable carbon reduction metrics, turning everyday commutes into measurable environmental impact.
 
+![MockUp](./assets/documentation/Mockups/1.png)
+
 ### Product Introduction
+[Demostration Video](https://drive.google.com/file/d/1KSdd08vH4-dykg06mrcUb1szYeJYHjQN/view?usp=sharing)
 
 * **The Problem:** Urban commuters often lack visibility into optimal public transit routes and have no clear way to measure the environmental impact of choosing eco-friendly transit options over single-occupancy gasoline vehicle driving. Traditional navigation apps focus solely on speed and distance without highlighting carbon savings or encouraging recurring sustainable commuting habits.
 * **The Solution:** Watch Tower provides an integrated transit and carbon accountability platform. Powered by Google Gemini, the app generates structured multi-modal itineraries (walking, bus, rail, etc.) complete with step-by-step route breakdowns and real-time carbon offset estimates. Users can save these route plans to an interactive "Emissions Diary" and log repeat daily commutes with a single tap to visualize their cumulative CO₂ savings over time.
@@ -28,9 +35,13 @@ Watch Tower bridges intelligent multi-modal transit planning with daily personal
 ### Page Overview
 
 * **Authentication (`UserAuth.jsx`):** Secure login and account registration interface powered by Firebase Auth, featuring input validation, error handling, and persistent user sessions.
+![Login](./assets/documentation/Screenshots/Login_Screenshot.jpg)
+* **Onboarding (`Onboarding.jsx`):** Button gated carousel containing app and pages overviews.
+![Onboarding](./assets/documentation/Screenshots/Onboarding_Screenshot.jpg)
 * **Route Planner & Map (`Mapping.jsx`):** Interactive map viewer utilizing Leaflet.js inside a WebView. Features location auto-detection, a collapsible bottom sheet for destination entry, Gemini-powered route generation, step-by-step itinerary leg breakdowns, and one-tap route saving to the user's database.
+![Mapping](./assets/documentation/Screenshots/Mapping_Screenshot.jpg)
 * **Emissions Diary (`History.jsx`):** A real-time dashboard displaying all saved route plans. Includes an aggregate impact summary bottom sheet showing cumulative CO₂ saved, total journeys completed, and total active routes.
-* **Trip Card Component (`TripLog.jsx`):** Reusable route card component that renders route metrics (distance, duration, leg counts, carbon saved) and provides an atomic `+ Log Journey` button for instant commute tracking.
+![History](./assets/documentation/Screenshots/History_Screenshot.jpg)
 
 ---
 

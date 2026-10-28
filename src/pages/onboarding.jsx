@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 
 const COLORS = {
   blue: "#6798FC",
@@ -14,19 +14,19 @@ const COLORS = {
 
 const SLIDES = [
   {
-    icon: "🗺️",
+    icon: require("../../assets/icons/Mapping.png"),
     title: "AI Multi-Modal Routing",
     subtitle: "Plan Eco-Friendly Routes",
     description: "Get optimal transit itineraries combining walking, buses, and rail powered by Google Gemini AI.",
   },
   {
-    icon: "🌱",
+    icon: require("../../assets/icons/History.png"),
     title: "Carbon Offset Tracking",
     subtitle: "Measure Your Savings",
     description: "Quantify your exact CO₂ reduction in real-time compared to driving a gasoline vehicle.",
   },
   {
-    icon: "📜",
+    icon: require("../../assets/icons/Tally.png"),
     title: "Emissions Diary",
     subtitle: "Log Daily Commutes",
     description: "Save your frequent routes and log repeat journeys with a single tap to track your long-term impact.",
@@ -63,7 +63,7 @@ function Onboarding({ navigation }) {
       {/* Main Slide Card */}
       <View style={styles.card}>
         <View style={styles.iconCircle}>
-          <Text style={styles.iconText}>{currentSlide.icon}</Text>
+          <Image style={styles.iconImage} source={currentSlide.icon} />
         </View>
 
         <View style={styles.textGroup}>
@@ -155,8 +155,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
   },
-  iconText: {
-    fontSize: 42,
+  iconImage: {
+    width: 87,
+    height: 87,
+    resizeMode: "contain",
   },
   textGroup: {
     alignItems: "center",

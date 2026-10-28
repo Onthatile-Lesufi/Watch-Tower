@@ -1,8 +1,7 @@
 import React from "react";
-import { Text, StyleSheet, View, Pressable } from "react-native";
-import { logJourneyTaken } from "../dbUtility";
+import { Text, StyleSheet, View, Pressable, Alert } from "react-native";
+import { logJourneyTaken, decrementJourneyTaken, deleteTripPlan } from "../dbUtility";
 
-// Watch Tower Color Palette
 const COLORS = {
   blue: "#6798FC",
   ecoGreen: "#C1EABB",
@@ -12,22 +11,54 @@ const COLORS = {
   lightGray: "#F4F5F7",
   borderGray: "#E5E5EA",
   pinkCTA: "#FF4C7A",
+  disabledGray: "#C7C7CC",
 };
 
 function TripLog({ navigation, trip }) {
-  // Safety guard in case trip object hasn't loaded yet
   if (!trip) return null;
 
   const legsCount = trip.legs?.length || 0;
   const journeysCount = trip.journeys || 0;
 
-  const handleLog = async () => {
+  const handleIncrement = async () => {
     if (!trip.id) return;
     try {
       await logJourneyTaken(trip.id);
     } catch (error) {
       console.error("Error logging journey:", error);
     }
+  };
+
+  const handleDecrement = async () => {
+    if (!trip.id || journeysCount <= 0) return;
+    try {
+      await decrementJourneyTaken(trip.id, journeysCount);
+    } catch (error) {
+      console.error("Error decrementing journey:", error);
+    }
+  };
+
+  const handleDelete = () => {
+    if (!trip.id) return;
+
+    Alert.alert(
+      "Delete Saved Trip",
+      "Are you sure you want to remove this route from your Emissions Diary?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete", 
+          style: "destructive", 
+          onPress: async () => {
+            try {
+              await deleteTripPlan(trip.id);
+            } catch (error) {
+              console.error("Error deleting trip:", error);
+            }
+          } 
+        },
+      ]
+    );
   };
 
   return (
@@ -49,9 +80,28 @@ function TripLog({ navigation, trip }) {
         </Text>
       </View>
 
-      <Pressable style={styles.logButton} onPress={handleLog}>
-        <Text style={styles.logButtonText}>+ Log Journey</Text>
-      </Pressable>
+      {/* Action Bar */}
+      <View style={styles.actionsRow}>
+        <View style={styles.counterGroup}>
+          <Pressable 
+            style={[styles.counterBtn, journeysCount <= 0 && styles.disabledBtn]} 
+            onPress={handleDecrement}
+            disabled={journeysCount <= 0}
+          >
+            <Text style={[styles.counterBtnText, journeysCount <= 0 && styles.disabledBtnText]}>
+              - 1
+            </Text>
+          </Pressable>
+
+          <Pressable style={styles.counterBtnPrimary} onPress={handleIncrement}>
+            <Text style={styles.counterBtnPrimaryText}>+ 1</Text>
+          </Pressable>
+        </View>
+
+        <Pressable style={styles.deleteBtn} onPress={handleDelete}>
+          <Text style={styles.deleteBtnText}>Remove</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -60,13 +110,15 @@ export default TripLog;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 14,
     marginVertical: 6,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.pinkCTA,
-    gap: 8,
+    borderColor: COLORS.borderGray,
+    borderWidth: 1,
+    gap: 10,
   },
   headerRow: {
     flexDirection: "row",
@@ -103,18 +155,61 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#666666",
   },
-  logButton: {
-    backgroundColor: COLORS.blue,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    alignSelf: "flex-start",
+  actionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 4,
   },
-  logButtonText: {
+  counterGroup: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  counterBtn: {
+    backgroundColor: COLORS.pinkCTA,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.borderGray,
+  },
+  counterBtnText: {
     fontFamily: "Open Sans",
     fontSize: 12,
     fontWeight: "700",
     color: COLORS.white,
+    
+  },
+  counterBtnPrimary: {
+    backgroundColor: COLORS.blue,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  counterBtnPrimaryText: {
+    fontFamily: "Open Sans",
+    fontSize: 12,
+    fontWeight: "700",
+    color: COLORS.white,
+  },
+  disabledBtn: {
+    backgroundColor: "#F2F2F7",
+    borderColor: "#E5E5EA",
+  },
+  disabledBtnText: {
+    color: COLORS.disabledGray,
+  },
+  deleteBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#FF3B30",
+  },
+  deleteBtnText: {
+    fontFamily: "Open Sans",
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#FF3B30",
   },
 });

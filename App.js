@@ -16,10 +16,10 @@ export default function App() {
       <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Landing" component={Landing}/>
+            <Stack.Screen name="Onboarding" component={Onboarding}/>
             <Stack.Screen name="Mapping" component={Mapping}/>
             <Stack.Screen name="Auth" component={UserAuth}/>
             <Stack.Screen name="History" component={History}/>
-            <Stack.Screen name="Onboarding" component={Onboarding}/>
             <Stack.Screen name="Settings" component={Settings}/>
           </Stack.Navigator>
       </NavigationContainer>
