@@ -66,11 +66,26 @@ Watch Tower relies on a modular React Native architecture coupled with serverles
 
 ---
 
+## Visuals
+### Mockups
+![MockUp1](./assets/documentation/Mockups/1.png)
+![MockUp2](./assets/documentation/Mockups/2.png)
+![MockUp3](./assets/documentation/Mockups/3.png)
+### Wireframes
+#### Planning
+![Old1](./assets/documentation/Wireframes/Old_Mapping.png)
+![Old2](./assets/documentation/Wireframes/Old_Diary.png)
+#### Final
+![Auth_Wireframe](./assets/documentation/Wireframes/Auth.png)
+![Map_Wireframe](./assets/documentation/Wireframes/Mapping.png)
+![Diary_Wireframe](./assets/documentation/Wireframes/Diary.png)
+![Settings_Wireframe](./assets/documentation/Wireframes/Settings.png)
+--- 
+
 ## Contributers
 
-Watch Tower is built and maintained by a dedicated team of developers passionate about sustainable urban mobility and modern software architecture:
-
-* **Development Team** — Core application development, AI routing prompt engineering, UI design, and Firebase database architecture.
+Watch Tower is built and maintained by me with sporadic help people such as:
+- Tsungai Katsuro - https://github.com/TsungaiKats 
 
 ---
 
